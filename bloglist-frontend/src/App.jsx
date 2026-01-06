@@ -4,6 +4,7 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import CreateBlog from './components/CreateBlog'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -12,6 +13,11 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+
 
   useEffect(() => {
     blogService.getAll().then(blogs => setBlogs( blogs ))  
@@ -46,7 +52,7 @@ const App = () => {
       setTimeout(() => setMessage(null), 4000)
 
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
+      setErrorMessage('Wrong username or password')
       setTimeout(() => {setErrorMessage(null)}, 3000)
     }
   }
@@ -54,9 +60,26 @@ const App = () => {
   const handleLogout = async (event) => {
     event.preventDefault()
     window.localStorage.removeItem('loggedBlogappUser')
+    blogService.setToken(null)
     setUser(null)
   }
   
+  const handleCreate = async (event) => {
+    event.preventDefault()
+    try {
+      const newBlog = await blogService.create({title, author, url,})
+      
+      setBlogs(prevBlogs => prevBlogs.concat(newBlog))
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+      setMessage('Blog added! ')
+      setTimeout(() => setMessage(null), 3000)
+    } catch (exception) {
+      setErrorMessage(' Missing information ')
+      setTimeout(() => setErrorMessage(null), 3000)
+    }
+  }
 
   return (
   <div>
@@ -73,13 +96,23 @@ const App = () => {
       onChangePassword={({ target }) => setPassword(target.value)}
       />) : (
       <>
-        <h2>blogs</h2>
+        <h2>Blogs</h2>
         <p>{user.name} logged-in</p>
+
+        <CreateBlog 
+          onSubmit={handleCreate} 
+          title = {title} 
+          author = {author} 
+          url = {url}
+          titleChange={({target}) => setTitle(target.value)}
+          authorChange={({target}) => setAuthor(target.value)}
+          urlChange={({target}) => setUrl(target.value)}
+        />
 
         {blogs.map(blog => (
           <Blog key={blog.id} blog={blog} />
         ))}
-
+        <p></p>
         <button type="submit" onClick={handleLogout}> logout </button>
       </>
     )}
