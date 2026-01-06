@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -55,20 +56,7 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
   }
-  const loginForm = () => {
-    return(
-      <div>
-      <h2>Login to the App: </h2>
-
-      <form onSubmit={handleLogin}>
-        <div> username <input value = {username} onChange={({ target }) => setUsername(target.value)}/> </div>
-        <div> password <input value = {password} onChange={({ target }) => setPassword(target.value)}/> </div>
-        <button type="submit">login</button>
-      </form>
-
-      </div>
-    )
-  }
+  
 
   return (
   <div>
@@ -76,9 +64,14 @@ const App = () => {
     <Notification message={message} type="success" />
     <Notification message={errorMessage} type="error" />
 
-    {user === null ? (
-      loginForm()
-    ) : (
+    {user === null ? 
+    (<LoginForm 
+      username={username} 
+      password={password} 
+      onSubmit={handleLogin} 
+      onChangeUsername={({ target }) => setUsername(target.value)}
+      onChangePassword={({ target }) => setPassword(target.value)}
+      />) : (
       <>
         <h2>blogs</h2>
         <p>{user.name} logged-in</p>
