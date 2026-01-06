@@ -16,13 +16,29 @@ const App = () => {
     blogService.getAll().then(blogs => setBlogs( blogs ))  
   }, [])
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  }, [])
   
   const handleLogin = async (event) => {
     event.preventDefault()
     console.log('logging in with: ',username, password)
     try {
       const user = await loginService.login({username, password,})
+
+      //Save the user credentials in the local storage
+      window.localStorage.setItem(
+        'loggedBlogappUser', JSON.stringify(user)
+      ) 
+
       setUser(user)
+      blogService.setToken(user.token)
+
       setUsername('')
       setPassword('')
       setMessage('Logged In!')
@@ -34,6 +50,11 @@ const App = () => {
     }
   }
 
+  const handleLogout = async (event) => {
+    event.preventDefault()
+    window.localStorage.removeItem('loggedBlogappUser')
+    setUser(null)
+  }
   const loginForm = () => {
     return(
       <div>
@@ -49,27 +70,29 @@ const App = () => {
     )
   }
 
-  return ( 
-    <div> 
+  return (
+  <div>
+    {/* Notifications siempre visibles */}
+    <Notification message={message} type="success" />
+    <Notification message={errorMessage} type="error" />
 
-      <Notification message={message} type="success" />
-      <Notification message={errorMessage} type="error" />
-
-      {/* Renders the login form only if user equal to null */}
-      {user === null ?
-      loginForm() :
-      <div>
+    {user === null ? (
+      loginForm()
+    ) : (
+      <>
         <h2>blogs</h2>
         <p>{user.name} logged-in</p>
-        {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} /> 
-        )}
-      </div>
-      }
-      
-      
-    </div>
+
+        {blogs.map(blog => (
+          <Blog key={blog.id} blog={blog} />
+        ))}
+
+        <button type="submit" onClick={handleLogout}> logout </button>
+      </>
+    )}
+  </div>
   )
+
 }
 
 export default App
