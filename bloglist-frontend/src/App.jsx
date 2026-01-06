@@ -36,11 +36,16 @@ const App = () => {
 
   const loginForm = () => {
     return(
+      <div>
+      <h2>Login to the App: </h2>
+
       <form onSubmit={handleLogin}>
         <div> username <input value = {username} onChange={({ target }) => setUsername(target.value)}/> </div>
         <div> password <input value = {password} onChange={({ target }) => setPassword(target.value)}/> </div>
         <button type="submit">login</button>
       </form>
+
+      </div>
     )
   }
 
@@ -54,13 +59,15 @@ const App = () => {
       {user === null ?
       loginForm() :
       <div>
+        <h2>blogs</h2>
         <p>{user.name} logged-in</p>
-      </div>
-    }
-      <h2>blogs</h2>
-      {blogs.map(blog =>
+        {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} /> 
-      )}
+        )}
+      </div>
+      }
+      
+      
     </div>
   )
 }
