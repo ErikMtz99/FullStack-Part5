@@ -72,7 +72,7 @@ const App = () => {
       setBlogs(prevBlogs => prevBlogs.concat(newBlog))
       setMessage('Blog added! ')
       setTimeout(() => setMessage(null), 3000)
-      
+
       blogFormRef.current.toggleVisibility()
 
     } catch (exception) {
@@ -90,7 +90,7 @@ const App = () => {
     {user === null ? 
       (
       <div>
-      <Togglable buttonLabel='login'>
+      <Togglable buttonLabel1='login' buttonLabel2='cancel'>
         <LoginForm 
         username={username} 
         password={password} 
@@ -104,7 +104,7 @@ const App = () => {
       <>
         <h2>Blogs</h2>
         <p>{user.name} logged-in</p>
-        <Togglable buttonLabel='Create new blog' ref={blogFormRef}>
+        <Togglable buttonLabel1='Create new blog' buttonLabel2='cancel' ref={blogFormRef}>
           <CreateBlog onCreate={handleCreate}/>
         </Togglable>
 
