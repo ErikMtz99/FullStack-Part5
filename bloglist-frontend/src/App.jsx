@@ -15,9 +15,7 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+
 
   const blogFormRef = useRef()
 
@@ -66,19 +64,17 @@ const App = () => {
     setUser(null)
   }
   
-  const handleCreate = async (event) => {
-    event.preventDefault()
+  const handleCreate = async (blogObject) => {
+
     try {
-      const newBlog = await blogService.create({title, author, url,})
+      const newBlog = await blogService.create(blogObject)
       
       setBlogs(prevBlogs => prevBlogs.concat(newBlog))
-      setTitle('')
-      setAuthor('')
-      setUrl('')
       setMessage('Blog added! ')
       setTimeout(() => setMessage(null), 3000)
-      blogFormRef.current.toggleVisibility()
       
+      blogFormRef.current.toggleVisibility()
+
     } catch (exception) {
       setErrorMessage(' Missing information ')
       setTimeout(() => setErrorMessage(null), 3000)
@@ -109,15 +105,7 @@ const App = () => {
         <h2>Blogs</h2>
         <p>{user.name} logged-in</p>
         <Togglable buttonLabel='Create new blog' ref={blogFormRef}>
-          <CreateBlog 
-            onSubmit={handleCreate} 
-            title = {title} 
-            author = {author} 
-            url = {url}
-            titleChange={({target}) => setTitle(target.value)}
-            authorChange={({target}) => setAuthor(target.value)}
-            urlChange={({target}) => setUrl(target.value)}
-          />
+          <CreateBlog onCreate={handleCreate}/>
         </Togglable>
 
         {blogs.map(blog => (
