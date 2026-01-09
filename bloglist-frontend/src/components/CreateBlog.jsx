@@ -6,7 +6,7 @@ const CreateBlog = ({onSubmit, title, author, url, titleChange, authorChange, ur
                 <div> Title: <input value={title} onChange={titleChange}></input> </div>
                 <div> Author: <input value={author} onChange={authorChange}></input> </div>
                 <div> Url: <input value={url} onChange={urlChange}></input> </div>
-                <button> Create </button>
+                <button> Submit blog </button>
                 <p></p>
             </form>
         </>

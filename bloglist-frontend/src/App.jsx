@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import CreateBlog from './components/CreateBlog'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -18,6 +19,7 @@ const App = () => {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs => setBlogs( blogs ))  
@@ -75,6 +77,8 @@ const App = () => {
       setUrl('')
       setMessage('Blog added! ')
       setTimeout(() => setMessage(null), 3000)
+      blogFormRef.current.toggleVisibility()
+      
     } catch (exception) {
       setErrorMessage(' Missing information ')
       setTimeout(() => setErrorMessage(null), 3000)
@@ -88,26 +92,33 @@ const App = () => {
     <Notification message={errorMessage} type="error" />
 
     {user === null ? 
-    (<LoginForm 
-      username={username} 
-      password={password} 
-      onSubmit={handleLogin} 
-      onChangeUsername={({ target }) => setUsername(target.value)}
-      onChangePassword={({ target }) => setPassword(target.value)}
-      />) : (
+      (
+      <div>
+      <Togglable buttonLabel='login'>
+        <LoginForm 
+        username={username} 
+        password={password} 
+        onSubmit={handleLogin} 
+        onChangeUsername={({ target }) => setUsername(target.value)}
+        onChangePassword={({ target }) => setPassword(target.value)}
+        />
+      </Togglable>
+      </div>
+      ) : (
       <>
         <h2>Blogs</h2>
         <p>{user.name} logged-in</p>
-
-        <CreateBlog 
-          onSubmit={handleCreate} 
-          title = {title} 
-          author = {author} 
-          url = {url}
-          titleChange={({target}) => setTitle(target.value)}
-          authorChange={({target}) => setAuthor(target.value)}
-          urlChange={({target}) => setUrl(target.value)}
-        />
+        <Togglable buttonLabel='Create new blog' ref={blogFormRef}>
+          <CreateBlog 
+            onSubmit={handleCreate} 
+            title = {title} 
+            author = {author} 
+            url = {url}
+            titleChange={({target}) => setTitle(target.value)}
+            authorChange={({target}) => setAuthor(target.value)}
+            urlChange={({target}) => setUrl(target.value)}
+          />
+        </Togglable>
 
         {blogs.map(blog => (
           <Blog key={blog.id} blog={blog} />
