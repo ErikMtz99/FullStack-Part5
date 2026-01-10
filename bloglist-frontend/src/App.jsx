@@ -81,6 +81,33 @@ const App = () => {
     }
   }
 
+  const handleLikes = async (blogObject) => {
+    try{
+      console.log('BLOG RECIBIDO:', blogObject)
+
+      const updatedBlog = {
+        title: blogObject.title,
+        author: blogObject.author,
+        url: blogObject.url,
+        likes: blogObject.likes + 1,
+        user: blogObject.user.id || blogObject.user
+      }
+      const returnedBlog = await blogService.update(blogObject.id, updatedBlog)
+
+      setBlogs(blogs.map(b =>
+      b.id === returnedBlog.id ? returnedBlog : b
+      ))
+
+      setMessage('Blog updated! ')
+      setTimeout(() => setMessage(null), 3000)
+
+    }catch (exception){
+      console.log(exception.response.data)
+      setErrorMessage(' Error updating blog ')
+      setTimeout(() => setErrorMessage(null), 3000)
+    }
+  }
+
   return (
   <div>
     {/* Notifications siempre visibles */}
@@ -109,7 +136,7 @@ const App = () => {
         </Togglable>
 
         {blogs.map(blog => (
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} addLike={() => handleLikes(blog)}/>
         ))}
         <p></p>
         <button type="submit" onClick={handleLogout}> logout </button>
