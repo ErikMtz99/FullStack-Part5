@@ -1,5 +1,5 @@
 
-const LoginForm = ({username, password, onSubmit, onChangeUsername, onChangePassword}) => {
+const LoginForm = ({ username, password, onSubmit, onChangeUsername, onChangePassword }) => {
     return(
       <div>
       <h2>Login to the App: </h2>

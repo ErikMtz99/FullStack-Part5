@@ -1,4 +1,4 @@
-import { useState,useEffect} from 'react'
+import { useState,useEffect } from 'react'
 
 const Notification = ({ message , type }) => {
     const [visible, setVisible] = useState(false)

@@ -20,7 +20,7 @@ const App = () => {
   const blogFormRef = useRef()
 
   useEffect(() => {
-    blogService.getAll().then(blogs => setBlogs( blogs ))  
+    blogService.getAll().then(blogs => setBlogs( blogs ))
   }, [])
 
   useEffect(() => {
@@ -31,17 +31,17 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
-  
+
   const handleLogin = async (event) => {
     event.preventDefault()
     console.log('logging in with: ',username, password)
     try {
-      const user = await loginService.login({username, password,})
+      const user = await loginService.login({ username, password })
 
       //Save the user credentials in the local storage
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
-      ) 
+      )
 
       setUser(user)
       blogService.setToken(user.token)
@@ -63,12 +63,12 @@ const App = () => {
     blogService.setToken(null)
     setUser(null)
   }
-  
+
   const handleCreate = async (blogObject) => {
 
     try {
       const newBlog = await blogService.create(blogObject)
-      
+
       setBlogs(prevBlogs => prevBlogs.concat(newBlog))
       setMessage('Blog added! ')
       setTimeout(() => setMessage(null), 3000)
@@ -109,7 +109,7 @@ const App = () => {
 
   const handleDelete = async (blog) => {
     try {
-      if(window.confirm(" Are you sure you want to delete this blog? ")){
+      if(window.confirm(' Are you sure you want to delete this blog? ')){
         console.log('BLOG RECIBIDO:', blog)
 
         await blogService.deleteBlog(blog.id)
@@ -119,7 +119,7 @@ const App = () => {
         setMessage('Blog deleted! ')
         setTimeout(() => setMessage(null), 3000)
       }
-      
+
     } catch (exception) {
       console.log(exception.response.data)
       setErrorMessage(' Error deleting blog ')
@@ -133,14 +133,14 @@ const App = () => {
     <Notification message={message} type="success" />
     <Notification message={errorMessage} type="error" />
 
-    {user === null ? 
+    {user === null ?
       (
       <div>
       <Togglable buttonLabel1='login' buttonLabel2='cancel'>
-        <LoginForm 
-        username={username} 
-        password={password} 
-        onSubmit={handleLogin} 
+        <LoginForm
+        username={username}
+        password={password}
+        onSubmit={handleLogin}
         onChangeUsername={({ target }) => setUsername(target.value)}
         onChangePassword={({ target }) => setPassword(target.value)}
         />
@@ -155,7 +155,7 @@ const App = () => {
         </Togglable>
 
         {[...blogs] //Se crea una copia de blogs para no mutar directamente
-        .sort((a,b)=> b.likes - a.likes)
+        .sort((a,b) => b.likes - a.likes)
         .map(blog => (
           <Blog key={blog.id} blog={blog} addLike={() => handleLikes(blog)} deleteBlog={() => handleDelete(blog)}/>
         ))}

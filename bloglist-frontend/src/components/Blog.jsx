@@ -1,4 +1,4 @@
-import Togglable from "./Togglable"
+import Togglable from './Togglable'
 
 const Blog = ({ blog, addLike, deleteBlog }) => {
   const blogStyle = {
@@ -8,10 +8,10 @@ const Blog = ({ blog, addLike, deleteBlog }) => {
     borderWidth: 1,
     marginBottom: 5
   }
-  
+
   return (
   <div style={blogStyle}>
-    {blog.title} 
+    {blog.title}
     <br></br>
     <Togglable buttonLabel1='view' buttonLabel2='hide'>
       {blog.url}
