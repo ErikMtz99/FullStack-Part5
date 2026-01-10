@@ -1,6 +1,6 @@
 import Togglable from "./Togglable"
 
-const Blog = ({ blog, addLike }) => {
+const Blog = ({ blog, addLike, deleteBlog }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -21,6 +21,7 @@ const Blog = ({ blog, addLike }) => {
       <br></br>
       {blog.author}
       <br></br>
+      <button onClick={deleteBlog}> delete </button>
     </Togglable>
   </div>
 )}

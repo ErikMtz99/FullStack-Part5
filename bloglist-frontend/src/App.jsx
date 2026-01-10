@@ -102,8 +102,27 @@ const App = () => {
       setTimeout(() => setMessage(null), 3000)
 
     }catch (exception){
-      console.log(exception.response.data)
       setErrorMessage(' Error updating blog ')
+      setTimeout(() => setErrorMessage(null), 3000)
+    }
+  }
+
+  const handleDelete = async (blog) => {
+    try {
+      if(window.confirm(" Are you sure you want to delete this blog? ")){
+        console.log('BLOG RECIBIDO:', blog)
+
+        await blogService.deleteBlog(blog.id)
+
+        setBlogs(blogs.filter(b => b.id !== blog.id))
+
+        setMessage('Blog deleted! ')
+        setTimeout(() => setMessage(null), 3000)
+      }
+      
+    } catch (exception) {
+      console.log(exception.response.data)
+      setErrorMessage(' Error deleting blog ')
       setTimeout(() => setErrorMessage(null), 3000)
     }
   }
@@ -138,9 +157,9 @@ const App = () => {
         {[...blogs] //Se crea una copia de blogs para no mutar directamente
         .sort((a,b)=> b.likes - a.likes)
         .map(blog => (
-          <Blog key={blog.id} blog={blog} addLike={() => handleLikes(blog)}/>
+          <Blog key={blog.id} blog={blog} addLike={() => handleLikes(blog)} deleteBlog={() => handleDelete(blog)}/>
         ))}
-        
+
         <p></p>
         <button type="submit" onClick={handleLogout}> logout </button>
       </>
