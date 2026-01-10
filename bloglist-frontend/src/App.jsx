@@ -135,9 +135,12 @@ const App = () => {
           <CreateBlog onCreate={handleCreate}/>
         </Togglable>
 
-        {blogs.map(blog => (
+        {[...blogs] //Se crea una copia de blogs para no mutar directamente
+        .sort((a,b)=> b.likes - a.likes)
+        .map(blog => (
           <Blog key={blog.id} blog={blog} addLike={() => handleLikes(blog)}/>
         ))}
+        
         <p></p>
         <button type="submit" onClick={handleLogout}> logout </button>
       </>
