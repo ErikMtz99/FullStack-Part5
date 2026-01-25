@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
 import Togglable from './Togglable'
+import CreateBlog from './CreateBlog'
 
 test('renders content', () => {
   const blog = {
@@ -64,4 +65,24 @@ test('Cliking like button 2 times', async () => {
 
   expect(mockHandler.mock.calls).toHaveLength(2)
 
+})
+
+test('<CreateBlog /> updates parent state and calls onCreate', async () => {
+  const mockHandler = vi.fn()
+  const user = userEvent.setup()
+
+  render(<CreateBlog onCreate={mockHandler} />)
+
+  const input1 = screen.getAllByRole('textbox')[0] //Title textbox
+  const input2 = screen.getAllByRole('textbox')[1] //Author textbox
+  const input3 = screen.getAllByRole('textbox')[2] //Url Textbox
+  const sendButton = screen.getByText('Submit blog')
+
+  await user.type(input1, 'testing a form...')
+  await user.type(input2, 'Erik')
+  await user.type(input3, 'test url')
+  await user.click(sendButton)
+
+  expect(mockHandler.mock.calls).toHaveLength(1)
+  expect(mockHandler.mock.calls[0][0].title).toBe('testing a form...')
 })
